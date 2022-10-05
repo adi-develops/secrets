@@ -4,7 +4,7 @@ const app = express()
 const port = 3000
 const ejs = require("ejs")
 const mongoose = require('mongoose')
-const encrypt = require("mongoose-encryption")
+const md5 = require("md5")
 
 app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
@@ -16,8 +16,6 @@ const userSchema = new mongoose.Schema({
     email: String,
     password: String
 })
-
-userSchema.plugin(encrypt, {secret: process.env.SECRET, encryptedFields: ["password"]})
 
 const User = mongoose.model('User', userSchema)
 
@@ -36,7 +34,7 @@ app.get('/register', (req, res) => {
 app.post("/register", (req, res) => {
     const userItem = new User({
         email: req.body.username,
-        password: req.body.password
+        password: md5(req.body.password)
     })
 
     userItem.save((err) => {
@@ -57,7 +55,7 @@ app.post("/login", (req, res) => {
         }
         else{
             if(foundUser){
-                if(req.body.password === foundUser.password){
+                if(md5(req.body.password) === foundUser.password){
                     res.render("secrets")
                 }
             }
