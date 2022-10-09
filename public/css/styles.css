@@ -14,3 +14,10 @@ body {
   color: #fff;
   background-color: #000;
 }
+
+.show-secrets-button {
+  display: block;
+  width: 20%;
+  margin: auto;
+  margin-top: 20px;
+}
